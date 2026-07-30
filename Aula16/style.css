@@ -36,4 +36,5 @@ footer{
     position: fixed;
     bottom: 0;
     width: 100%;
+    align-content: space-between;
 }
