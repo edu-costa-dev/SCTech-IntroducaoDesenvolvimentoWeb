@@ -23,8 +23,8 @@ class Eletronico extends Produto {
   }
 }
 
-// const visualizaProduto2 = new Produto("Gel",19.90)
 const visualizaProduto = new Eletronico("iPhone 16",2999.0,`Dentro da Garantia!`,);
 visualizaProduto.mostraDetalhes();
-// visualizaProduto2.mostraDetalhes();
+const visualizaProduto2 = new Produto("Gel",19.90)
+visualizaProduto2.mostraDetalhes();
 
