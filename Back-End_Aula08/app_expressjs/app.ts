@@ -1,22 +1,17 @@
 import express from "express";
+import clientRouter from "./Router/clientes";
+import BackEnd from "./backend/backend";    
+import maisRotas from "./maisRotas/maisRotas";
+import contTech from "./conteudoDeTecnologia/contTech";
+
 
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send("<h1>Rota Inicial</h1>")
-})
+app.use(clientRouter);
+app.use(BackEnd);
+app.use(maisRotas);
+app.use(contTech);
 
-app.get('/sobrenos', (req, res) => {
-    res.send("Rota falando sobre a empresa")
-})
-
-app.get('/trabalheConosco', (req, res) => {
-    res.send("ROpções de Carreira")
-})
-
-app.get('/Contato', (req, res) => {
-    res.send("48-9999-9999")
-})
 
 app.listen(3000, () => {
     console.log("Servidor criado...")
