@@ -11,6 +11,8 @@ app.use(clientRouter);
 app.use(BackEnd);
 app.use(maisRotas);
 app.use(contTech);
+app.set('view engine', 'pug');
+app.set('views', './Views')
 
 
 app.listen(3000, () => {
