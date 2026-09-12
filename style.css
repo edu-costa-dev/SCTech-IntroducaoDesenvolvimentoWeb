@@ -1,0 +1,1252 @@
+/* ==========================================================================
+   SCTech • Portfólio de Desenvolvimento Web - Eduardo da Costa
+   Tema: Visual Studio Code (Dark Modern)
+   ========================================================================== */
+
+:root {
+    /* Paleta Oficial VS Code Dark */
+    --vs-titlebar-bg: #323233;
+    --vs-activity-bg: #181818;
+    --vs-sidebar-bg: #252526;
+    --vs-sidebar-header-bg: #212224;
+    --vs-editor-bg: #1e1e1e;
+    --vs-tabs-bg: #252526;
+    --vs-tab-active-bg: #1e1e1e;
+    --vs-tab-inactive-bg: #2d2d2d;
+    --vs-tab-hover-bg: #333333;
+    --vs-statusbar-bg: #007acc;
+    --vs-border: #3e3e42;
+    --vs-border-subtle: #2d2d2d;
+    --vs-hover: rgba(255, 255, 255, 0.07);
+    --vs-active-selection: #094771;
+    
+    /* Cores de Texto */
+    --vs-text: #cccccc;
+    --vs-text-bright: #ffffff;
+    --vs-text-muted: #858585;
+    --vs-accent-blue: #007acc;
+    --vs-accent-blue-hover: #1f9cf0;
+    
+    /* Cores de Sintaxe (Syntax Highlighting) */
+    --syntax-keyword: #c586c0; /* roxo */
+    --syntax-func: #dcdcaa;    /* amarelo suave */
+    --syntax-tag: #569cd6;     /* azul */
+    --syntax-attr: #9cdcfe;    /* azul claro */
+    --syntax-string: #ce9178;  /* salmão / laranja */
+    --syntax-comment: #6a9955; /* verde */
+    --syntax-number: #b5cea8;  /* verde claro */
+    --syntax-css-prop: #9cdcfe;
+    --syntax-css-val: #ce9178;
+
+    /* Tipografia */
+    --font-ui: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-code: "Cascadia Code", "Fira Code", Consolas, Monaco, "Courier New", monospace;
+}
+
+/* Reset básico e tipografia */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--vs-editor-bg);
+    color: var(--vs-text);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Estrutura Principal em CSS Grid */
+.app-layout {
+    display: grid;
+    grid-template-rows: 35px 1fr 24px;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   1. BARRA DE TÍTULO (VS Code Title Bar)
+   ========================================================================== */
+.titlebar {
+    background-color: var(--vs-titlebar-bg);
+    border-bottom: 1px solid var(--vs-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    user-select: none;
+    z-index: 100;
+}
+
+.titlebar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vscode-icon {
+    flex-shrink: 0;
+}
+
+.titlebar-menu {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 12px;
+}
+
+.menu-item {
+    color: var(--vs-text);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+
+.menu-item:hover {
+    background-color: var(--vs-hover);
+    color: var(--vs-text-bright);
+}
+
+.titlebar-center {
+    flex: 1;
+    max-width: 540px;
+    margin: 0 16px;
+}
+
+.command-palette-btn {
+    width: 100%;
+    background-color: #252526;
+    border: 1px solid var(--vs-border);
+    color: var(--vs-text);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.command-palette-btn:hover {
+    background-color: #2a2d2e;
+    border-color: var(--vs-accent-blue);
+    color: var(--vs-text-bright);
+}
+
+.command-palette-btn .kb-shortcut {
+    font-size: 11px;
+    background: #007acc;
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.titlebar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.didactic-help-trigger {
+    background: linear-gradient(135deg, #1f9cf0, #007acc);
+    color: #ffffff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: filter 0.2s;
+}
+
+.didactic-help-trigger:hover {
+    filter: brightness(1.15);
+}
+
+.window-controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--vs-text-muted);
+    font-size: 12px;
+}
+
+.win-btn {
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.win-btn:hover {
+    color: var(--vs-text-bright);
+}
+
+.win-close:hover {
+    color: #f48771;
+}
+
+/* ==========================================================================
+   2. CORPO PRINCIPAL (Activity Bar + Sidebar + Split Editor)
+   ========================================================================== */
+.main-body {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* ACTIVITY BAR */
+.activity-bar {
+    width: 48px;
+    background-color: var(--vs-activity-bg);
+    border-right: 1px solid var(--vs-border-subtle);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.activity-top, .activity-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    align-items: center;
+}
+
+.activity-btn {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--vs-text-muted);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.15s;
+    text-decoration: none;
+}
+
+.activity-btn:hover {
+    color: var(--vs-text-bright);
+}
+
+.activity-btn.active {
+    color: var(--vs-text-bright);
+}
+
+.activity-btn.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background-color: var(--vs-text-bright);
+}
+
+/* SIDEBAR EXPLORER */
+.sidebar {
+    width: 290px;
+    background-color: var(--vs-sidebar-bg);
+    border-right: 1px solid var(--vs-border-subtle);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: width 0.2s ease;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    border-right: none;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: var(--vs-text);
+    border-bottom: 1px solid var(--vs-border-subtle);
+    user-select: none;
+}
+
+.sidebar-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--vs-text-muted);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-toggle-btn:hover {
+    color: var(--vs-text-bright);
+    background-color: var(--vs-hover);
+}
+
+/* Dica para Leigos */
+.didactic-box {
+    margin: 8px 12px;
+    background: rgba(0, 122, 204, 0.12);
+    border-left: 3px solid var(--vs-accent-blue);
+    padding: 8px 10px;
+    border-radius: 0 4px 4px 0;
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: #e0e0e0;
+}
+
+.didactic-box-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 4px;
+    color: #70b7ff;
+    font-size: 12px;
+}
+
+/* Campo de busca */
+.search-box {
+    padding: 0 12px 8px;
+}
+
+.search-box input {
+    width: 100%;
+    background-color: #3c3c3c;
+    border: 1px solid var(--vs-border);
+    color: var(--vs-text-bright);
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: var(--vs-accent-blue);
+}
+
+/* Árvore de Exercícios */
+.explorer-tree {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 0 16px;
+}
+
+.explorer-tree::-webkit-scrollbar {
+    width: 8px;
+}
+
+.explorer-tree::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.tree-section {
+    margin-bottom: 8px;
+}
+
+.tree-section-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #b0b0b0;
+    cursor: pointer;
+    user-select: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tree-section-header:hover {
+    color: var(--vs-text-bright);
+    background-color: var(--vs-hover);
+}
+
+.tree-chevron {
+    transition: transform 0.2s ease;
+    font-size: 10px;
+    display: inline-block;
+    width: 12px;
+    text-align: center;
+}
+
+.tree-section.collapsed .tree-chevron {
+    transform: rotate(-90deg);
+}
+
+.tree-section.collapsed .tree-items {
+    display: none;
+}
+
+.tree-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px 6px 26px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 12px;
+    color: var(--vs-text);
+    border-left: 2px solid transparent;
+    transition: background 0.15s;
+    text-decoration: none;
+}
+
+.tree-item:hover {
+    background-color: var(--vs-hover);
+    color: var(--vs-text-bright);
+}
+
+.tree-item.active {
+    background-color: var(--vs-active-selection);
+    color: #ffffff;
+    border-left: 2px solid var(--vs-accent-blue);
+}
+
+.item-left {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.item-icon {
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+.item-badge {
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.badge-html { background-color: rgba(227, 76, 38, 0.25); color: #e34c26; }
+.badge-css { background-color: rgba(38, 77, 228, 0.25); color: #4b88ff; }
+.badge-js { background-color: rgba(247, 223, 30, 0.25); color: #f7df1e; }
+.badge-node { background-color: rgba(104, 160, 99, 0.25); color: #83cd29; }
+
+/* ==========================================================================
+   3. SPLIT EDITOR (Área Dividida: Editor + Preview)
+   ========================================================================== */
+.split-editor {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+    background-color: var(--vs-editor-bg);
+}
+
+/* Painel de Código (Esquerda) e Preview (Direita) */
+.editor-pane, .preview-pane {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.editor-pane {
+    border-right: 1px solid var(--vs-border);
+}
+
+/* Banner Explicativo Superior nos Painéis (Acessibilidade para Leigos) */
+.pane-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 12px;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.pane-banner-code {
+    background-color: #172430;
+    border-bottom: 1px solid rgba(0, 122, 204, 0.3);
+}
+
+.pane-banner-preview {
+    background-color: #1a2a1a;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.pane-banner-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+}
+
+.pane-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.4px;
+    flex-shrink: 0;
+}
+
+.badge-code {
+    background-color: #007acc;
+    color: #ffffff;
+}
+
+.badge-preview {
+    background-color: #2e7d32;
+    color: #ffffff;
+}
+
+.pane-desc {
+    font-size: 11.5px;
+    color: #b0c4de;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pane-banner-preview .pane-desc {
+    color: #b7e1cd;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.action-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #dcdcdc;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s;
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+}
+
+/* TABS BAR (Abas do Editor) */
+.tabs-container {
+    display: flex;
+    background-color: var(--vs-tabs-bg);
+    border-bottom: 1px solid var(--vs-border-subtle);
+    overflow-x: auto;
+    overflow-y: hidden;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.tabs-container::-webkit-scrollbar {
+    height: 3px;
+}
+
+.tabs-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.editor-tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    background-color: var(--vs-tab-inactive-bg);
+    color: var(--vs-text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    border-right: 1px solid var(--vs-border-subtle);
+    border-top: 2px solid transparent;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+}
+
+.editor-tab:hover {
+    background-color: var(--vs-tab-hover-bg);
+    color: var(--vs-text);
+}
+
+.editor-tab.active {
+    background-color: var(--vs-tab-active-bg);
+    color: var(--vs-text-bright);
+    border-top: 2px solid var(--vs-accent-blue);
+    font-weight: 600;
+}
+
+.tab-icon {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.tab-close {
+    font-size: 12px;
+    color: var(--vs-text-muted);
+    border-radius: 3px;
+    padding: 0 2px;
+    margin-left: 4px;
+    opacity: 0.7;
+}
+
+.tab-close:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: var(--vs-text-bright);
+}
+
+/* BREADCRUMBS */
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--vs-text-muted);
+    background-color: var(--vs-editor-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.bc-sep {
+    font-size: 9px;
+    opacity: 0.6;
+}
+
+.bc-part.active-file {
+    color: var(--vs-text);
+    font-weight: 600;
+}
+
+/* ÁREA DE CÓDIGO COM LINHAS */
+.code-wrapper {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    min-width: 0;
+    background-color: var(--vs-editor-bg);
+    overflow: auto;
+    font-family: var(--font-code);
+    font-size: 13px;
+    line-height: 1.55;
+    position: relative;
+}
+
+.code-wrapper::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.code-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.line-numbers {
+    padding: 10px 12px 10px 14px;
+    text-align: right;
+    color: #858585;
+    user-select: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    font-size: 12.5px;
+    background-color: #1e1e1e;
+    min-width: 44px;
+    flex-shrink: 0;
+}
+
+.code-display {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 16px;
+    margin: 0;
+    background-color: transparent;
+    color: #d4d4d4;
+    overflow-x: auto;
+    white-space: pre;
+    tab-size: 4;
+}
+
+.code-display.wrap-active {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.code-display code {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    display: block;
+    min-height: 100%;
+}
+
+/* Syntax Highlighting Classes */
+.tok-comment { color: var(--syntax-comment); font-style: italic; }
+.tok-keyword { color: var(--syntax-keyword); font-weight: 600; }
+.tok-tag { color: var(--syntax-tag); }
+.tok-attr { color: var(--syntax-attr); }
+.tok-string { color: var(--syntax-string); }
+.tok-func { color: var(--syntax-func); }
+.tok-number { color: var(--syntax-number); }
+.tok-operator { color: #d4d4d4; }
+.tok-property { color: var(--syntax-css-prop); }
+
+/* ==========================================================================
+   4. PAINEL DE PREVIEW (Navegador Simulado)
+   ========================================================================== */
+.preview-viewport-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.vp-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e0e0e0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.15s;
+}
+
+.vp-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.vp-btn.active {
+    background: #2e7d32;
+    border-color: #4caf50;
+    color: #ffffff;
+}
+
+/* BARRA DE ENDEREÇOS DO NAVEGADOR */
+.browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: #252526;
+    border-bottom: 1px solid var(--vs-border);
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.browser-btn {
+    background: transparent;
+    border: none;
+    color: var(--vs-text-muted);
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    text-decoration: none;
+}
+
+.browser-btn:hover {
+    background-color: var(--vs-hover);
+    color: var(--vs-text-bright);
+}
+
+.browser-address {
+    flex: 1;
+    background-color: #1e1e1e;
+    border: 1px solid var(--vs-border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: #9cdcfe;
+    overflow: hidden;
+}
+
+.lock-icon {
+    font-size: 11px;
+    color: #4ec9b0;
+    flex-shrink: 0;
+}
+
+.url-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ext-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--vs-border);
+    color: var(--vs-text-bright);
+    font-size: 11px;
+    gap: 4px;
+    padding: 4px 8px;
+}
+
+.ext-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+/* IFRAME CONTAINER */
+.preview-frame-container {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    background-color: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: auto;
+    padding: 0;
+}
+
+#previewIframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #ffffff;
+    transition: width 0.3s ease, max-height 0.3s ease;
+}
+
+/* Responsividade do Preview (Modo Tablet e Celular) */
+.preview-frame-container.viewport-tablet {
+    padding: 20px 10px;
+}
+
+.preview-frame-container.viewport-tablet #previewIframe {
+    width: 768px;
+    max-height: 94%;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    border: 2px solid #333333;
+}
+
+.preview-frame-container.viewport-mobile {
+    padding: 20px 10px;
+}
+
+.preview-frame-container.viewport-mobile #previewIframe {
+    width: 375px;
+    max-height: 94%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    border: 3px solid #333333;
+}
+
+/* TERMINAL DE BACK-END (Fallback para Node.js) */
+.backend-terminal-view {
+    width: 100%;
+    height: 100%;
+    background-color: #181818;
+    color: #cccccc;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-code);
+}
+
+.terminal-tabbar {
+    display: flex;
+    background-color: #252526;
+    border-bottom: 1px solid var(--vs-border-subtle);
+    padding: 0 8px;
+}
+
+.term-tab {
+    padding: 6px 12px;
+    font-size: 11px;
+    color: var(--vs-text-muted);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+}
+
+.term-tab.active {
+    color: var(--vs-text-bright);
+    border-bottom: 2px solid var(--vs-accent-blue);
+    font-weight: 600;
+}
+
+.terminal-content {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.term-line {
+    font-size: 13px;
+}
+
+.term-cmd {
+    color: #4ec9b0;
+    font-weight: 600;
+}
+
+.term-output {
+    background: #0d0d0d;
+    border: 1px solid #333333;
+    padding: 12px 14px;
+    border-radius: 4px;
+    color: #dcdcdc;
+    font-size: 12.5px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.term-didactic-info {
+    margin-top: 20px;
+    background: rgba(0, 122, 204, 0.1);
+    border: 1px solid rgba(0, 122, 204, 0.3);
+    border-radius: 6px;
+    padding: 14px;
+    font-family: var(--font-ui);
+}
+
+.term-didactic-info h4 {
+    color: #70b7ff;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.term-didactic-info p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #cccccc;
+}
+
+/* ==========================================================================
+   5. BARRA DE STATUS INFERIOR (VS Code Status Bar)
+   ========================================================================== */
+.statusbar {
+    background-color: var(--vs-statusbar-bg);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 11.5px;
+    user-select: none;
+    z-index: 100;
+}
+
+.status-left, .status-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: default;
+}
+
+.status-item.git-branch {
+    cursor: pointer;
+}
+
+.status-project-active {
+    font-weight: 600;
+}
+
+.credit {
+    opacity: 0.9;
+}
+
+/* ==========================================================================
+   6. MODAL DIDÁTICO / AJUDA PARA LEIGOS
+   ========================================================================== */
+.didactic-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    border: none;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.didactic-modal[open] {
+    display: flex;
+}
+
+.modal-card {
+    background-color: #252526;
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 620px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    animation: modalPop 0.25s ease-out;
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background-color: #2d2d2d;
+    border-bottom: 1px solid var(--vs-border-subtle);
+}
+
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-emoji {
+    font-size: 20px;
+}
+
+.modal-title h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--vs-text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.modal-close-btn:hover {
+    color: #ffffff;
+    background-color: var(--vs-hover);
+}
+
+.modal-body {
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.intro-p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #e0e0e0;
+}
+
+.didactic-features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 10px 12px;
+    border-radius: 6px;
+    border-left: 3px solid var(--vs-accent-blue);
+}
+
+.f-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.f-text strong {
+    font-size: 12.5px;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.f-text p {
+    font-size: 12px;
+    color: #cccccc;
+    line-height: 1.4;
+}
+
+.glossary-section h4 {
+    font-size: 13px;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.glossary-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.glossary-list li {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #dcdcdc;
+}
+
+.pill {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10.5px;
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+.pill-html { background-color: #e34c26; color: #fff; }
+.pill-css { background-color: #264de4; color: #fff; }
+.pill-js { background-color: #f7df1e; color: #000; }
+.pill-node { background-color: #68a063; color: #fff; }
+
+.modal-tip {
+    background: rgba(247, 223, 30, 0.1);
+    border: 1px solid rgba(247, 223, 30, 0.3);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #fff4a3;
+    line-height: 1.4;
+}
+
+.modal-footer {
+    padding: 12px 18px;
+    background-color: #212224;
+    border-top: 1px solid var(--vs-border-subtle);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-action-btn {
+    background-color: var(--vs-accent-blue);
+    color: #ffffff;
+    border: none;
+    padding: 7px 16px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.modal-action-btn:hover {
+    background-color: var(--vs-accent-blue-hover);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ==========================================================================
+   7. RESPONSIVIDADE (CSS Grid & Flexbox)
+   ========================================================================== */
+
+/* Telas menores que 1024px: Split Editor empilhado (Cima / Baixo) */
+@media (max-width: 1024px) {
+    .split-editor {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .editor-pane {
+        border-right: none;
+        border-bottom: 2px solid var(--vs-border);
+    }
+}
+
+/* Telas menores que 768px: Mobile / Celular */
+@media (max-width: 768px) {
+    .titlebar-menu {
+        display: none;
+    }
+
+    .titlebar-center {
+        margin: 0 8px;
+    }
+
+    .sidebar {
+        position: absolute;
+        left: 48px;
+        top: 35px;
+        bottom: 24px;
+        z-index: 50;
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar.collapsed {
+        display: none;
+    }
+
+    .status-item:not(.git-branch):not(.status-project-active) {
+        display: none;
+    }
+}
